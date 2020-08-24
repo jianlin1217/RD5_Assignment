@@ -1,40 +1,45 @@
 <?php
 session_start();
 require("connectDB.php");
-
-if(isset($_POST['btnsave']))
-{
+//現在時間
+date_default_timezone_set("Asia/Taipei");
+$nowDate;
+//存款
+if (isset($_POST['btnsave'])) {
     // echo "存錢囉";
-    $temp=$_SESSION['canUseMoney']+$_POST['smoney'];
-    $savemoney=$_POST['smoney'];
-    $mid=$_SESSION['nowMemberId'];
-    $commendTextsave=<<<end
+    $temp = $_SESSION['canUseMoney'] + $_POST['smoney'];
+    $savemoney = $_POST['smoney'];
+    $mid = $_SESSION['nowMemberId'];
+    $commendTextsave = <<<end
     UPDATE memberAccount SET money = $temp where memberId=$mid;
     end;
-    mysqli_query($link,$commendTextsave);
-    $commendTextdetail=<<<end
-    insert into historyList (transactionMoney,memberId,addOrsub) 
-    values ($savemoney,$mid,"存入");
+    mysqli_query($link, $commendTextsave);
+    $nowDate=date("Y-m-d H:i:s");
+    // echo $nowDate;
+    $commendTextdetail = <<<end
+    insert into historyList (transactionMoney,memberId,addOrsub,transactionDate) 
+    values ($savemoney,$mid,"存入","$nowDate");
     end;
-    mysqli_query($link,$commendTextdetail);
+    mysqli_query($link, $commendTextdetail);
 }
 // echo isset($_POST['gmoney']);
-if(isset($_POST['btnget']))
-{
+
+//提款
+if (isset($_POST['btnget'])) {
     // echo "提款羅";
     // echo $_POST['gmoney'];
-    $temp=$_SESSION['canUseMoney']-$_POST['gmoney'];
-    $getmoney=$_POST['gmoney'];
-    $mid=$_SESSION['nowMemberId'];
-    $commendTextget=<<<end
+    $temp = $_SESSION['canUseMoney'] - $_POST['gmoney'];
+    $getmoney = $_POST['gmoney'];
+    $mid = $_SESSION['nowMemberId'];
+    $commendTextget = <<<end
     UPDATE memberAccount SET money = $temp where memberId=$mid;
     end;
-    mysqli_query($link,$commendTextget);
-    $commendTextdetail=<<<end
+    mysqli_query($link, $commendTextget);
+    $commendTextdetail = <<<end
     insert into historyList (transactionMoney,memberId,addOrsub) 
     values ($getmoney,$mid,"提出");
     end;
-    mysqli_query($link,$commendTextdetail);
+    mysqli_query($link, $commendTextdetail);
 }
 ?>
 
@@ -59,7 +64,7 @@ if(isset($_POST['btnget']))
 </head>
 
 <body>
-    <?php require("header.php");?>
+    <?php require("header.php"); ?>
     <form method="post">
         <div id="d1" name="s">
             <label for="moneysave">請輸入欲儲存的金額</label>
@@ -72,40 +77,30 @@ if(isset($_POST['btnget']))
             <button class="btn btn-danger" name="btnget">確定送出</button>
         </div>
         <div id="d3" name="askm">
-            <label for="moneyask">餘額還剩下<?=$_SESSION['canUseMoney']?></label>
+            <label for="moneyask">餘額還剩下<?= $_SESSION['canUseMoney'] ?></label>
         </div>
         <div id="d4" name="askd">
             <label for="detailask">明細</label>
             <table>
                 <tr>
-                    <th>1</th>
-                    <th>2</th>
-                    <th>3</th>
+                    <th>Company</th>
+                    <th>Contact</th>
+                    <th>Country</th>
                 </tr>
-                <tr>
-                    <th>4</th>
-                    <th>5</th>
-                    <th>6</th>
-                </tr>
-                <tr>
-                    <th>7</th>
-                    <th>8</th>
-                    <th>9</th>
-                </tr>
+
             </table>
+
         </div>
-   </form>
+    </form>
     <script>
-
-
-        $("#save").click(function(){
+        $("#save").click(function() {
             // alert("存錢");
             $("#d1").show();
             $("#d2").hide();
             $("#d3").hide();
             $("#d4").hide();
         })
-        $("#get").click(function(){
+        $("#get").click(function() {
             // alert("提款");
 
             $("#d2").show();
@@ -113,22 +108,20 @@ if(isset($_POST['btnget']))
             $("#d3").hide();
             $("#d4").hide();
         })
-        $("#askMoney").click(function(){
+        $("#askMoney").click(function() {
             // alert("查詢餘額");
             $("#d3").show();
             $("#d2").hide();
             $("#d1").hide();
             $("#d4").hide();
         })
-        $("#askDetails").click(function(){
+        $("#askDetails").click(function() {
             // alert("查詢明細");
             $("#d4").show();
             $("#d2").hide();
             $("#d3").hide();
             $("#d1").hide();
         })
-
-
     </script>
 </body>
 
