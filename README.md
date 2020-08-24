@@ -25,5 +25,6 @@ connectDB.php
             historyList   (歷史明細
 
 # 0824  v1.3 登入畫面設定
+簡單登入畫面（使用Bootstrap）
 
-
+# 0824  v1.4 接收使用者登入資訊並比對

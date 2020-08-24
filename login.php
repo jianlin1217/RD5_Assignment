@@ -1,3 +1,20 @@
+<?php
+    session_start();
+    //儲存使用者名稱及密碼方便比對
+    $compareName=$_SESSION['mName'];
+    $comparePass=$_SESSION['mPass'];
+
+    if(isset($_POST['Login']))
+    {
+        echo "1234";
+    }
+    if(isset($_POST['Reg']))
+    {
+        echo "5468";
+        header("location: regAccount.php");
+    }
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -18,7 +35,7 @@
 <body>
 <div class="container">
     <h1>網路銀行登入</h1>
-    <form>
+    <form method="post" >
       <div class="form-group row">
         <label for="act" class="col-4 col-form-label">帳號(Account)</label> 
         <div class="col-8">
@@ -35,7 +52,7 @@
       <div class="form-group row">
         <label for="pwd" class="col-4 col-form-label">密碼(Password)</label> 
         <div class="col-8">
-          <input id="pwd" name="pwd" type="text" class="form-control">
+          <input id="pwd" name="pwd" type="password" class="form-control">
         </div>
       </div>
       <div class="form-group row">
@@ -49,7 +66,9 @@
       </div> 
       <div class="form-group row">
         <div class="offset-4 col-8">
-          <button name="submit" type="submit" class="btn btn-primary">Submit</button>
+          <input value="登入" type="submit" id="btnLogin" name="Login" class="btn btn-primary">  </input>
+          <input value="註冊" type="submit" id="btnReg" name="Reg" class="btn btn-success">  </input>
+          <a href="">忘記密碼？</a>
         </div>
       </div>
     </form>
