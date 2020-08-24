@@ -1,3 +1,26 @@
+<?php
+    session_start();
+    require_once("connectDB.php");
+    //各項儲存
+    $_SESSION['NowLogin'];          //現在登入的是誰
+    $_SESSION['mName']=Array();     //資料庫中有的使用者名稱
+    $_SESSION['mPass']=Array();     //資料庫中有的使用者密碼
+
+
+    $result=mysqli_query($link,"set names UTF8");
+    $commandText=<<<End
+    select * from memberList;
+    End;
+    $result = mysqli_query($link,$commandText);
+    // var_dump($result);
+    while($row=mysqli_fetch_assoc($result))
+    {
+            Array_push($_SESSION['mName'],$row["memberName"]);
+            Array_push($_SESSION['mPass'],$row["memberPass"]);
+    }
+    
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
