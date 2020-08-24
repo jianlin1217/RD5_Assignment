@@ -2,12 +2,14 @@
     session_start();
     require_once("connectDB.php");
     //各項儲存
-    $_SESSION['NowLogin'];          //現在登入的是誰
+    $_SESSION['NowLogin']=null;     //現在登入的是誰
+    $_SESSION['nowMemberId']=null;  //現在登入的id
     $_SESSION['mName']=Array();     //資料庫中有的使用者名稱
     $_SESSION['mPass']=Array();     //資料庫中有的使用者密碼
+    $_SESSION['mId']=Array();       //資料庫存的使用者編號
 
 
-    $result=mysqli_query($link,"set names UTF8");
+
     $commandText=<<<End
     select * from memberList;
     End;
@@ -17,8 +19,9 @@
     {
             Array_push($_SESSION['mName'],$row["memberName"]);
             Array_push($_SESSION['mPass'],$row["memberPass"]);
+            Array_push($_SESSION['mId'],$row["memberID"]);
     }
-    
+    // var_dump($_SESSION['mId']);
 ?>
 
 <!DOCTYPE html>

@@ -5,6 +5,21 @@ h1
 }
 div
 {
-    
     text-align: center;
+}
+div#d1
+{
+    display: none;
+}
+div#d2
+{
+    display: none;
+}
+div#d3
+{
+    display: none;
+}
+div#d4
+{
+    display: none;
 }

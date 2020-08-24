@@ -3,15 +3,36 @@
     //儲存使用者名稱及密碼方便比對
     $compareName=$_SESSION['mName'];
     $comparePass=$_SESSION['mPass'];
-
+    $compareId=$_SESSION['mId'];
+    // var_dump($compareId);
+    
     if(isset($_POST['Login']))
     {
-        echo "1234";
+        // echo "1234";
+        // echo $_POST['act'].".........".$_POST['pwd'];
+        for($i=0;$i<count($compareName);$i++)
+        {
+            if($compareName[$i]==$_POST['act']&&$comparePass[$i]==$_POST['pwd'])
+            {
+                // echo "123";
+                $_SESSION['nowMemberId']=$compareId[$i];
+                $_SESSION['NowLogin']=$compareName[$i];
+                // echo $_SESSION['nowMemberId']."*****";
+                header("location: member.php");
+            }
+            // echo $compareName[$i] ."--".$comparePass[$i]."<br>";
+        }
+        echo "輸入的使用者名稱或者密碼有錯";
     }
     if(isset($_POST['Reg']))
     {
-        echo "5468";
+        // echo "5468";
         header("location: regAccount.php");
+    }
+    if(isset($_POST['forget']))
+    {
+        echo "123";
+        header("location: www.google.com");
     }
 ?>
 
@@ -68,12 +89,12 @@
         <div class="offset-4 col-8">
           <input value="登入" type="submit" id="btnLogin" name="Login" class="btn btn-primary">  </input>
           <input value="註冊" type="submit" id="btnReg" name="Reg" class="btn btn-success">  </input>
-          <a href="">忘記密碼？</a>
+          <a name="forget" href="">忘記密碼？</a>
         </div>
       </div>
     </form>
 </div>
-
+    
 </body>
 
 </html>
