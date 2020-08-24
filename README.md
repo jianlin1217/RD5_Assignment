@@ -24,5 +24,6 @@ connectDB.php
             memberAccount (會員金額有多少
             historyList   (歷史明細
 
-# 0824  v1.3 
+# 0824  v1.3 登入畫面設定
+
 
