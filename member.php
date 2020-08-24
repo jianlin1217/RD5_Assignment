@@ -1,15 +1,41 @@
 <?php
 session_start();
-require_once("connectDB.php");
-if(isset($_POST['smoney']))
+require("connectDB.php");
+
+if(isset($_POST['btnsave']))
 {
-    echo "存錢囉";
+    // echo "存錢囉";
+    $temp=$_SESSION['canUseMoney']+$_POST['smoney'];
+    $savemoney=$_POST['smoney'];
+    $mid=$_SESSION['nowMemberId'];
+    $commendTextsave=<<<end
+    UPDATE memberAccount SET money = $temp where memberId=$mid;
+    end;
+    mysqli_query($link,$commendTextsave);
+    $commendTextdetail=<<<end
+    insert into historyList (transactionMoney,memberId,addOrsub) 
+    values ($savemoney,$mid,"存入");
+    end;
+    mysqli_query($link,$commendTextdetail);
 }
 // echo isset($_POST['gmoney']);
-// if(isset($_POST['gmoney']))
-// {
-//     echo "提款羅";
-// }
+if(isset($_POST['btnget']))
+{
+    // echo "提款羅";
+    // echo $_POST['gmoney'];
+    $temp=$_SESSION['canUseMoney']-$_POST['gmoney'];
+    $getmoney=$_POST['gmoney'];
+    $mid=$_SESSION['nowMemberId'];
+    $commendTextget=<<<end
+    UPDATE memberAccount SET money = $temp where memberId=$mid;
+    end;
+    mysqli_query($link,$commendTextget);
+    $commendTextdetail=<<<end
+    insert into historyList (transactionMoney,memberId,addOrsub) 
+    values ($getmoney,$mid,"提出");
+    end;
+    mysqli_query($link,$commendTextdetail);
+}
 ?>
 
 <!DOCTYPE html>
@@ -38,18 +64,35 @@ if(isset($_POST['smoney']))
         <div id="d1" name="s">
             <label for="moneysave">請輸入欲儲存的金額</label>
             <input id="moneysave" name="smoney" type="number">
-            <button class="btn btn-primary">確定送出</button>
+            <button class="btn btn-primary" name="btnsave">確定送出</button>
         </div>
         <div id="d2" name="g">
             <label for="moneyget">請輸入欲提出的金額</label>
             <input id="moneyget" name="gmoney" type="number">
-            <button class="btn btn-danger">確定送出</button>
+            <button class="btn btn-danger" name="btnget">確定送出</button>
         </div>
         <div id="d3" name="askm">
             <label for="moneyask">餘額還剩下<?=$_SESSION['canUseMoney']?></label>
         </div>
         <div id="d4" name="askd">
             <label for="detailask">明細</label>
+            <table>
+                <tr>
+                    <th>1</th>
+                    <th>2</th>
+                    <th>3</th>
+                </tr>
+                <tr>
+                    <th>4</th>
+                    <th>5</th>
+                    <th>6</th>
+                </tr>
+                <tr>
+                    <th>7</th>
+                    <th>8</th>
+                    <th>9</th>
+                </tr>
+            </table>
         </div>
    </form>
     <script>
@@ -64,6 +107,7 @@ if(isset($_POST['smoney']))
         })
         $("#get").click(function(){
             // alert("提款");
+
             $("#d2").show();
             $("#d1").hide();
             $("#d3").hide();
