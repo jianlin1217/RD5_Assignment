@@ -1,6 +1,6 @@
 <?php
-session_start();
-
+    session_start();
+    require("connectDB.php");
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -10,8 +10,8 @@ session_start();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"> 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">  
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- jQuery library -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <!-- Latest compiled JavaScript -->
@@ -22,7 +22,7 @@ session_start();
 <body>
     <div class="container">
         <h1>註冊</h1>
-        <form>
+        <form method="post" action="">
             <div class="form-group row">
                 <label for="act" class="col-4 col-form-label">帳號(Account)</label>
                 <div class="col-8">
@@ -55,20 +55,58 @@ session_start();
             </div>
             <div class="form-group row">
                 <div class="offset-4 col-8">
-                    <button name="submit" id="register" type="button" class="btn btn-primary">Submit</button>
-                    <button name="submit" id="backIndex" type="button" class="btn btn-primary">返回首頁</button>
+                    <input name="reg" id="register" value="送出" type="submit" class="btn btn-primary"></input>
+                    <button name="submit" id="backIndex" type="button" class="btn btn-success">返回首頁</button>
                 </div>
             </div>
         </form>
-
+        <?php
+                if(isset($_POST['reg']))
+                {
+                    $uName=$_POST['act'];
+                    $uPass=$_POST['pwd'];
+                    $uAddress=$_POST['address'];
+                    $uPhone=$_POST['Phone'];
+                    $uMail=$_POST['email'];
+                    $regText=<<<end
+                    insert into memberList
+                    (memberName,memberPass,address,phone,email)
+                    VALUES
+                    ("$uName","$uPass","$uAddress","$uPhone","$uMail");
+                    end;
+                    //存到資料庫中
+                    $result=mysqli_query($link,$regText);
+                    $getId=<<<end
+                    select memberID from memberList where memberName="$uName";
+                    end;
+                    //取得系統建立的id
+                    // echo $getId."123<br>";
+                    $result2=mysqli_query($link,$getId);
+                    $row=mysqli_fetch_assoc($result2);
+                    $newmId=$row['memberID'];
+                    echo $newmId;
+                    //創立戶頭
+                    $newAccount=<<<end
+                    insert into memberAccount (memberId,money) VALUES ($newmId,0);
+                    end;
+                    $result3=mysqli_query($link,$newAccount);
+                    ?>
+                    <script>
+                        alert("註冊成功！");
+                        location.href="index.php";
+                    </script>
+                <?php   
+                    }
+                ?>
     </div>
     <script>
-        $("#register").click(function(){
+        $("#register").click(function() {
             // alert("OHOH");
+
         });
-        $("#backIndex").click(function(){
+        $("#backIndex").click(function() {
             // alert("HOHO");
-            location.href="index.php";
+            location.href = "index.php";
         })
     </script>
 </body>

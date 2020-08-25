@@ -89,7 +89,7 @@
         <div class="offset-4 col-8">
           <input value="登入" type="submit" id="btnLogin" name="Login" class="btn btn-primary">  </input>
           <input value="註冊" type="submit" id="btnReg" name="Reg" class="btn btn-success">  </input>
-          <a name="forget" href="">忘記密碼？</a>
+          <!-- <a name="forget" href="">忘記密碼？</a> -->
         </div>
       </div>
     </form>

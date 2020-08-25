@@ -45,10 +45,12 @@ if (isset($_POST['btnget'])) {
     UPDATE memberAccount SET money = $temp where memberId=$mid;
     end;
     mysqli_query($link, $commendTextget);
+    $nowDate = date("Y-m-d H:i:s");
     $commendTextdetail = <<<end
     insert into historyList (transactionMoney,memberId,addOrsub,transactionDate) 
     values ($getmoney,$mid,"提出","$nowDate");
     end;
+    // echo $commendTextdetail;
     mysqli_query($link, $commendTextdetail);
 }
 ?>

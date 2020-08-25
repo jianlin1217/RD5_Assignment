@@ -2,7 +2,7 @@
     session_start();
     require("connectDB.php");
     //餘額
-    $_SESSION['canUseMoney'];
+    $_SESSION['canUseMoney']=0;
     $nowId=$_SESSION['nowMemberId'];
     // echo $_SESSION['nowMemberId'];
 
