@@ -1,9 +1,19 @@
 <?php
 session_start();
 require("connectDB.php");
+$memberId=$_SESSION['nowMemberId'];
+//抓出明細
+// echo $memberId."123";
+$commendTextDetail=<<<end
+SELECT * FROM `historyList` WHERE memberId = $memberId;
+end;
+// echo $commendTextDetail;
+$dResult=mysqli_query($link,$commendTextDetail);
+
 //現在時間
 date_default_timezone_set("Asia/Taipei");
 $nowDate;
+
 //存款
 if (isset($_POST['btnsave'])) {
     // echo "存錢囉";
@@ -14,7 +24,7 @@ if (isset($_POST['btnsave'])) {
     UPDATE memberAccount SET money = $temp where memberId=$mid;
     end;
     mysqli_query($link, $commendTextsave);
-    $nowDate=date("Y-m-d H:i:s");
+    $nowDate = date("Y-m-d H:i:s");
     // echo $nowDate;
     $commendTextdetail = <<<end
     insert into historyList (transactionMoney,memberId,addOrsub,transactionDate) 
@@ -36,8 +46,8 @@ if (isset($_POST['btnget'])) {
     end;
     mysqli_query($link, $commendTextget);
     $commendTextdetail = <<<end
-    insert into historyList (transactionMoney,memberId,addOrsub) 
-    values ($getmoney,$mid,"提出");
+    insert into historyList (transactionMoney,memberId,addOrsub,transactionDate) 
+    values ($getmoney,$mid,"提出","$nowDate");
     end;
     mysqli_query($link, $commendTextdetail);
 }
@@ -65,6 +75,27 @@ if (isset($_POST['btnget'])) {
 
 <body>
     <?php require("header.php"); ?>
+    <script>
+        <?php
+        //設立flag 讓沒登入的無法直接透過網址進入
+        $flag = false;
+        $accessM = $_SESSION['mId'];
+        for ($i = 0; $i < count($_SESSION['mId']); $i++) {
+            // echo  $_SESSION['nowMemberId']."<br>";
+            // echo   $accessM[$i]."<br>";
+            if ($accessM[$i] == $_SESSION['nowMemberId']) {
+                $flag = true;
+                // echo "有相符";
+            }
+        }
+        if ($flag != true) {
+        ?>
+            alert("請先登入");
+            location.href="index.php";
+        <?php
+        }
+        ?>
+    </script>
     <form method="post">
         <div id="d1" name="s">
             <label for="moneysave">請輸入欲儲存的金額</label>
@@ -83,17 +114,34 @@ if (isset($_POST['btnget'])) {
             <label for="detailask">明細</label>
             <table>
                 <tr>
-                    <th>Company</th>
-                    <th>Contact</th>
-                    <th>Country</th>
+                    <th>金額</th>
+                    <th>收／支</th>
+                    <th>交易日期</th>
                 </tr>
+                <?php
+                    while($row=mysqli_fetch_assoc($dResult))
+                    {
+                ?>
+                <tr>
+                    <td><?=$row['transactionMoney']?></td>
+                    <td><?=$row['addOrsub']?></td>
+                    <td><?=$row['transactionDate']?></td>
+                </tr>               
+                <?php
+                    }
+                ?>
+
+
+                
 
             </table>
 
         </div>
     </form>
     <script>
+        //畫面隱藏即顯示
         $("#save").click(function() {
+            
             // alert("存錢");
             $("#d1").show();
             $("#d2").hide();
@@ -101,8 +149,8 @@ if (isset($_POST['btnget'])) {
             $("#d4").hide();
         })
         $("#get").click(function() {
+           
             // alert("提款");
-
             $("#d2").show();
             $("#d1").hide();
             $("#d3").hide();
