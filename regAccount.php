@@ -24,31 +24,31 @@
         <h1>註冊</h1>
         <form method="post" action="">
             <div class="form-group row">
-                <label for="act" class="col-4 col-form-label">帳號(Account)</label>
+                <label for="act" class="col-4 col-form-label">帳號(Account)2~20碼，開頭需為英文</label>
                 <div class="col-8">
-                    <input id="act" name="act" type="text" class="form-control">
+                    <input id="act" name="act" type="text" class="form-control" pattern="\D{1}\w{1,19}">
                 </div>
             </div>
             <div class="form-group row">
-                <label for="pwd" class="col-4 col-form-label">密碼(Password)</label>
+                <label for="pwd" class="col-4 col-form-label">密碼(Password)6~20碼</label>
                 <div class="col-8">
-                    <input id="pwd" name="pwd" type="text" class="form-control">
+                    <input id="pwd" name="pwd" type="text" class="form-control" pattern="\w{6,20}">
                 </div>
             </div>
             <div class="form-group row">
-                <label for="Phone" class="col-4 col-form-label">手機</label>
+                <label for="Phone" class="col-4 col-form-label">手機(Telephone)</label>
                 <div class="col-8">
-                    <input id="Phone" name="Phone" type="text" class="form-control">
+                    <input id="Phone" name="Phone" type="text" class="form-control" pattern="\d{10}|0[2-8][2-9]*[6]*-\d{7}">
                 </div>
             </div>
             <div class="form-group row">
-                <label for="email" class="col-4 col-form-label">信箱</label>
+                <label for="email" class="col-4 col-form-label">信箱(Email)</label>
                 <div class="col-8">
-                    <input id="email" name="email" type="text" class="form-control">
+                    <input id="email" name="email" type="text" class="form-control" pattern="\w+[-]*\w+@+\w+[.]*\w+[.]*\w+[.]*\w+">
                 </div>
             </div>
             <div class="form-group row">
-                <label for="address" class="col-4 col-form-label">居住地</label>
+                <label for="address" class="col-4 col-form-label">居住地(Address)</label>
                 <div class="col-8">
                     <input id="address" name="address" type="text" class="form-control">
                 </div>
@@ -74,7 +74,8 @@
                     VALUES
                     ("$uName","$uPass","$uAddress","$uPhone","$uMail");
                     end;
-                    //存到資料庫中
+                    // echo $regText;
+                    // 存到資料庫中
                     $result=mysqli_query($link,$regText);
                     $getId=<<<end
                     select memberID from memberList where memberName="$uName";
@@ -84,7 +85,7 @@
                     $result2=mysqli_query($link,$getId);
                     $row=mysqli_fetch_assoc($result2);
                     $newmId=$row['memberID'];
-                    echo $newmId;
+                    // echo $newmId;
                     //創立戶頭
                     $newAccount=<<<end
                     insert into memberAccount (memberId,money) VALUES ($newmId,0);

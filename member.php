@@ -2,6 +2,101 @@
 session_start();
 require("connectDB.php");
 $memberId=$_SESSION['nowMemberId'];
+
+//現在時間
+date_default_timezone_set("Asia/Taipei");
+$nowDate;
+
+//表單是否重複送出
+// $formflag=0;
+// echo $formflag."<br>";
+//存款
+    if (isset($_POST['btnsave'])) {
+        // echo "存錢囉";
+        // echo $formflag.":save";
+        if($_POST['smoney']<=0)
+        {
+            ?>
+            <script>
+                alert("存款金額不得小於零或等於零！");
+            </script>
+            <?php
+        }
+        {
+            $temp = $_SESSION['canUseMoney'] + $_POST['smoney'];
+            $savemoney = $_POST['smoney'];
+            $mid = $_SESSION['nowMemberId'];
+            $commendTextsave = <<<end
+            UPDATE memberAccount SET money = $temp where memberId=$mid;
+            end;
+            mysqli_query($link, $commendTextsave);
+            $nowDate = date("Y-m-d H:i:s");
+            // echo $nowDate;
+            $commendTextdetail = <<<end
+            insert into historyList (transactionMoney,memberId,addOrsub,transactionDate) 
+            values ($savemoney,$mid,"存入","$nowDate");
+            end;
+            mysqli_query($link, $commendTextdetail);
+            unset($_POST['btnsave']);
+            $formflag=0;
+        }
+    }
+//提款
+if (isset($_POST['btnget'])){
+    // echo "提款羅";
+    // echo $formflag.":get";
+    if($_POST['gmoney']<0)
+    {
+        ?>
+        <script>
+            alert("提款金額不可為負數!");
+        </script>
+        <?php
+    }
+    else if($_POST['gmoney']>$_SESSION['canUseMoney'])
+    {
+        ?>
+        <script>
+            alert("提款金額不可大於餘額");
+        </script>
+        <?php
+    }
+    else if($_POST['gmoney']>20000)
+    {       
+        ?>
+        <script>
+            alert("提款金額不可大於20000");
+        </script>
+         <?php
+    }
+    else if(($_POST['gmoney']%100)!=0)
+    {
+        ?>
+        <script>
+            alert("提款請以一百為單位!");
+        </script>
+         <?php
+    }
+    else
+    {
+        $temp = $_SESSION['canUseMoney'] - $_POST['gmoney'];
+        $getmoney = $_POST['gmoney'];
+        $mid = $_SESSION['nowMemberId'];
+        $commendTextget = <<<end
+        UPDATE memberAccount SET money = $temp where memberId=$mid;
+        end;
+        mysqli_query($link, $commendTextget);
+        $nowDate = date("Y-m-d H:i:s");
+        $commendTextdetail = <<<end
+        insert into historyList (transactionMoney,memberId,addOrsub,transactionDate) 
+        values ($getmoney,$mid,"提出","$nowDate");
+        end;
+        // echo $commendTextdetail;
+        mysqli_query($link, $commendTextdetail);
+        unset($_POST['btnget']);
+        $formflag=0;
+    }
+}
 //抓出明細
 // echo $memberId."123";
 $commendTextDetail=<<<end
@@ -10,49 +105,7 @@ end;
 // echo $commendTextDetail;
 $dResult=mysqli_query($link,$commendTextDetail);
 
-//現在時間
-date_default_timezone_set("Asia/Taipei");
-$nowDate;
 
-//存款
-if (isset($_POST['btnsave'])) {
-    // echo "存錢囉";
-    $temp = $_SESSION['canUseMoney'] + $_POST['smoney'];
-    $savemoney = $_POST['smoney'];
-    $mid = $_SESSION['nowMemberId'];
-    $commendTextsave = <<<end
-    UPDATE memberAccount SET money = $temp where memberId=$mid;
-    end;
-    mysqli_query($link, $commendTextsave);
-    $nowDate = date("Y-m-d H:i:s");
-    // echo $nowDate;
-    $commendTextdetail = <<<end
-    insert into historyList (transactionMoney,memberId,addOrsub,transactionDate) 
-    values ($savemoney,$mid,"存入","$nowDate");
-    end;
-    mysqli_query($link, $commendTextdetail);
-}
-// echo isset($_POST['gmoney']);
-
-//提款
-if (isset($_POST['btnget'])) {
-    // echo "提款羅";
-    // echo $_POST['gmoney'];
-    $temp = $_SESSION['canUseMoney'] - $_POST['gmoney'];
-    $getmoney = $_POST['gmoney'];
-    $mid = $_SESSION['nowMemberId'];
-    $commendTextget = <<<end
-    UPDATE memberAccount SET money = $temp where memberId=$mid;
-    end;
-    mysqli_query($link, $commendTextget);
-    $nowDate = date("Y-m-d H:i:s");
-    $commendTextdetail = <<<end
-    insert into historyList (transactionMoney,memberId,addOrsub,transactionDate) 
-    values ($getmoney,$mid,"提出","$nowDate");
-    end;
-    // echo $commendTextdetail;
-    mysqli_query($link, $commendTextdetail);
-}
 ?>
 
 <!DOCTYPE html>
@@ -80,17 +133,17 @@ if (isset($_POST['btnget'])) {
     <script>
         <?php
         //設立flag 讓沒登入的無法直接透過網址進入
-        $flag = false;
+        $logflag = false;
         $accessM = $_SESSION['mId'];
         for ($i = 0; $i < count($_SESSION['mId']); $i++) {
             // echo  $_SESSION['nowMemberId']."<br>";
             // echo   $accessM[$i]."<br>";
             if ($accessM[$i] == $_SESSION['nowMemberId']) {
-                $flag = true;
+                $logflag = true;
                 // echo "有相符";
             }
         }
-        if ($flag != true) {
+        if ($logflag != true) {
         ?>
             alert("請先登入");
             location.href="index.php";
@@ -98,16 +151,19 @@ if (isset($_POST['btnget'])) {
         }
         ?>
     </script>
-    <form method="post">
+
+    <!--表單送出-->
+
+    <form method="post" id="form">
         <div id="d1" name="s">
             <label for="moneysave">請輸入欲儲存的金額</label>
             <input id="moneysave" name="smoney" type="number">
-            <button class="btn btn-primary" name="btnsave">確定送出</button>
+            <button id="btnsave" class="btn btn-primary" name="btnsave">確定送出</button>
         </div>
         <div id="d2" name="g">
             <label for="moneyget">請輸入欲提出的金額</label>
             <input id="moneyget" name="gmoney" type="number">
-            <button class="btn btn-danger" name="btnget">確定送出</button>
+            <button id="btnget" class="btn btn-danger" name="btnget">確定送出</button>
         </div>
         <div id="d3" name="askm">
             <label for="moneyask">餘額還剩下<?= $_SESSION['canUseMoney'] ?></label>
@@ -132,18 +188,12 @@ if (isset($_POST['btnget'])) {
                 <?php
                     }
                 ?>
-
-
-                
-
             </table>
-
         </div>
     </form>
     <script>
-        //畫面隱藏即顯示
+        //畫面隱藏跟顯示
         $("#save").click(function() {
-            
             // alert("存錢");
             $("#d1").show();
             $("#d2").hide();
@@ -151,7 +201,6 @@ if (isset($_POST['btnget'])) {
             $("#d4").hide();
         })
         $("#get").click(function() {
-           
             // alert("提款");
             $("#d2").show();
             $("#d1").hide();

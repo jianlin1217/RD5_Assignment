@@ -38,7 +38,23 @@
               <a class="nav-link" id="askDetails" name="askd" href="#">查詢明細</a>
             </li>
             <li class="nav-item">
-              <p class="navbar-brand">餘額：<?=$_SESSION['canUseMoney']?></p>
+              <p class="navbar-brand">餘額：
+                <?php 
+                  if($_SESSION['canUseMoney']>1000)
+                  {
+                    for($i=0;$i<strlen(floor($_SESSION['canUseMoney']))-2;$i++)
+                    echo "*";
+                    if(($_SESSION['canUseMoney']%100)<10)
+                    echo "0".$_SESSION['canUseMoney']%100;
+                    else
+                    echo $_SESSION['canUseMoney']%100;
+                  }
+                  else
+                  {
+                    echo $_SESSION['canUseMoney'];
+                  } 
+                ?>
+              </p>
             </li>
             <li class="nav-item">
               <a id="logout" class="nav-link" href="index.php">登出</a>
