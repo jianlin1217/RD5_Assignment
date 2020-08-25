@@ -166,7 +166,7 @@ $dResult=mysqli_query($link,$commendTextDetail);
             <button id="btnget" class="btn btn-danger" name="btnget">確定送出</button>
         </div>
         <div id="d3" name="askm">
-            <label for="moneyask">餘額還剩下<?= $_SESSION['canUseMoney'] ?></label>
+            <label id="moneyask" for="moneyask">餘額還剩下<?= $_SESSION['canUseMoney'] ?></label>
         </div>
         <div id="d4" name="askd">
             <label for="detailask">明細</label>
