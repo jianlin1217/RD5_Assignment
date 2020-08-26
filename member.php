@@ -131,6 +131,10 @@ $dResult=mysqli_query($link,$commendTextDetail);
 <body>
     <?php require("header.php"); ?>
     <script>
+    if ( window.history.replaceState ) 
+    {
+        window.history.replaceState( null, null, window.location.href );
+    }
         <?php
         //設立flag 讓沒登入的無法直接透過網址進入
         $logflag = false;

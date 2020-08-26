@@ -56,10 +56,13 @@
                 ?>
               </p>
             </li>
-            <li class="nav-item">
-              <a id="logout" class="nav-link" href="index.php">登出</a>
-            </li>
           </ul>
+                <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a id="logout" class="nav-link" href="index.php">登出</a>
+                  </li>
+                </ul>
+          
         </div>
    </form>
 </nav>
