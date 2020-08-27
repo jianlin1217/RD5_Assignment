@@ -131,6 +131,7 @@ $dResult=mysqli_query($link,$commendTextDetail);
 <body>
     <?php require("header.php"); ?>
     <script>
+ //清除歷史避免重複送出表單
     if ( window.history.replaceState ) 
     {
         window.history.replaceState( null, null, window.location.href );
