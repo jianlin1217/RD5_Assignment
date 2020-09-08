@@ -75,6 +75,8 @@ connectDB.php
 使用 window.history.replaceState( null, null, window.location.href );
 修改歷史紀錄 把值清空
 
+
+
 ### 待解決問題
 註冊辨識是否已經有同帳戶了
 

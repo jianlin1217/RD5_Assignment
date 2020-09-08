@@ -32,13 +32,13 @@
               <a class="nav-link" id="get" name="g" href="#">提款</a>
             </li>  
             <li class="nav-item">
-              <a class="nav-link" id="askMoney" name="askm" href="#">查詢餘額</a>
+              <a class="nav-link" id="askDetails" name="askd" href="#">查詢明細</a>
             </li>  
             <li class="nav-item">
-              <a class="nav-link" id="askDetails" name="askd" href="#">查詢明細</a>
-            </li>
+              <a class="nav-link" id="askMoney" name="askm" href="#">顯示餘額</a>
+            </li>  
             <li class="nav-item">
-              <p class="navbar-brand">餘額：
+              <p class="navbar-brand" id="remain" name="remain">餘額：
                 <?php 
                   if($_SESSION['canUseMoney']>1000)
                   {

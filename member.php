@@ -170,9 +170,9 @@ $dResult=mysqli_query($link,$commendTextDetail);
             <input id="moneyget" name="gmoney" type="number">
             <button id="btnget" class="btn btn-danger" name="btnget">確定送出</button>
         </div>
-        <div id="d3" name="askm">
+        <!-- <div id="d3" name="askm">
             <label id="moneyask" for="moneyask">餘額還剩下<?= $_SESSION['canUseMoney'] ?></label>
-        </div>
+        </div> -->
         <div id="d4" name="askd">
             <label for="detailask">明細</label>
             <table>
@@ -212,12 +212,23 @@ $dResult=mysqli_query($link,$commendTextDetail);
             $("#d3").hide();
             $("#d4").hide();
         })
+        let flag =0;
         $("#askMoney").click(function() {
             // alert("查詢餘額");
-            $("#d3").show();
-            $("#d2").hide();
-            $("#d1").hide();
-            $("#d4").hide();
+            
+            if(flag==0)
+            {
+                $("#askMoney").text("隱藏餘額");
+                $("#remain").text("餘額："+"<?=$_SESSION['canUseMoney']?>");
+                flag=1;
+            }
+            else
+            {
+                $("#askMoney").text("顯示餘額");
+                let money="<?php if($_SESSION['canUseMoney']>1000) {for($i=0;$i<strlen(floor($_SESSION['canUseMoney']))-2;$i++)echo "*";if(($_SESSION['canUseMoney']%100)<10)echo "0".$_SESSION['canUseMoney']%100;else echo $_SESSION['canUseMoney']%100;}else {echo $_SESSION['canUseMoney'];} ?>";
+                $("#remain").text("餘額："+money);
+                flag=0;
+            }
         })
         $("#askDetails").click(function() {
             // alert("查詢明細");

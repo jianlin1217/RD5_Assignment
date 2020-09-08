@@ -5,25 +5,6 @@
     $comparePass=$_SESSION['mPass'];
     $compareId=$_SESSION['mId'];
     // var_dump($compareId);
-    
-    if(isset($_POST['Login']))
-    {
-        // echo "1234";
-        // echo $_POST['act'].".........".$_POST['pwd'];
-        for($i=0;$i<count($compareName);$i++)
-        {
-            if($compareName[$i]==$_POST['act']&&$comparePass[$i]==$_POST['pwd'])
-            {
-                // echo "123";
-                $_SESSION['nowMemberId']=$compareId[$i];
-                $_SESSION['NowLogin']=$compareName[$i];
-                // echo $_SESSION['nowMemberId']."*****";
-                header("location: member.php");
-            }
-            // echo $compareName[$i] ."--".$comparePass[$i]."<br>";
-        }
-        echo "輸入的使用者名稱或者密碼有錯";
-    }
     if(isset($_POST['Reg']))
     {
         // echo "5468";
@@ -54,7 +35,7 @@
 </head>
 
 <body>
-<div class="container">
+<div class="container" style="margin-top: 300px;">
     <h1>網路銀行登入</h1>
     <form method="post" >
       <div class="form-group row">
@@ -66,14 +47,14 @@
                 <i class="fa fa-address-card"></i>
               </div>
             </div> 
-            <input id="act" name="act" type="text" class="form-control">
+            <input id="act" name="act" type="text" class="form-control"pattern="\D{1}\w{1,19}" >
           </div>
         </div>
       </div>
       <div class="form-group row">
         <label for="pwd" class="col-4 col-form-label">密碼(Password)</label> 
         <div class="col-8">
-          <input id="pwd" name="pwd" type="password" class="form-control">
+          <input id="pwd" name="pwd" type="password" class="form-control"pattern="\w{6,20}">
         </div>
       </div>
       <div class="form-group row">
@@ -94,6 +75,31 @@
       </div>
     </form>
 </div>
+<?php
+if(isset($_POST['Login']))
+{
+    // echo "1234";
+    // echo $_POST['act'].".........".$_POST['pwd'];
+    for($i=0;$i<count($compareName);$i++)
+    {
+        if($compareName[$i]==$_POST['act']&&$comparePass[$i]==$_POST['pwd'])
+        {
+            // echo "123";
+            $_SESSION['nowMemberId']=$compareId[$i];
+            $_SESSION['NowLogin']=$compareName[$i];
+            // echo $_SESSION['nowMemberId']."*****";
+            header("location: member.php");
+        }
+        // echo $compareName[$i] ."--".$comparePass[$i]."<br>";
+    }
+    ?>
+    <script>
+      alert("輸入的使用者名稱或者密碼有錯");
+    </script>
+    <?php
+
+}
+?>
     
 </body>
 

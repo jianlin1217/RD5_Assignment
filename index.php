@@ -41,12 +41,15 @@
 </head>
 
 <body>
-    <div>
-        <h1>線上網銀系統</h1>
-    </div>
-    <div>
-        <button type="button" class="btn btn-success" id="btnLogin">登入</button>
-        <button type="button" class="btn btn-primary" id="btnReg">註冊</button>
+    <div style="text-align:center;margin-top:300px;">
+        <div>
+            <h1>線上網銀系統</h1>
+        </div>
+        <div>
+            <button type="button" class="btn btn-success" id="btnLogin">登入</button>
+            <button type="button" class="btn btn-primary" id="btnReg">註冊</button>
+        </div>
+
     </div>
 </body>
 <script>
