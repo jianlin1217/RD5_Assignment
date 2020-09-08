@@ -10,10 +10,51 @@ $nowDate;
 //表單是否重複送出
 // $formflag=0;
 // echo $formflag."<br>";
+//快速存提款
+for($i=1;$i<=6;$i++)
+{
+    if(isset($_POST['smoney'.$i]))
+    {
+        $temp = $_SESSION['canUseMoney'] + ($i*1000);
+        $savemoney = $i*1000;
+        $mid = $_SESSION['nowMemberId'];
+        $commendTextsave = <<<end
+        UPDATE memberAccount SET money = $temp where memberId=$mid;
+        end;
+        mysqli_query($link, $commendTextsave);
+        $nowDate = date("Y-m-d H:i:s");
+        // echo $nowDate;
+        $commendTextdetail = <<<end
+        insert into historyList (transactionMoney,memberId,addOrsub,transactionDate,remain) 
+        values ($savemoney,$mid,"存入","$nowDate",$temp);
+        end;
+        mysqli_query($link, $commendTextdetail);
+    }
+    if(isset($_POST['gmoney'.$i]))
+    {
+        $temp = $_SESSION['canUseMoney'] - ($i*1000);
+        $savemoney = $i*1000;
+        $mid = $_SESSION['nowMemberId'];
+        $commendTextsave = <<<end
+        UPDATE memberAccount SET money = $temp where memberId=$mid;
+        end;
+        mysqli_query($link, $commendTextsave);
+        $nowDate = date("Y-m-d H:i:s");
+        // echo $nowDate;
+        $commendTextdetail = <<<end
+        insert into historyList (transactionMoney,memberId,addOrsub,transactionDate,remain) 
+        values ($savemoney,$mid,"提出","$nowDate",$temp);
+        end;
+        // echo $commendTextdetail;
+        mysqli_query($link, $commendTextdetail);
+    }
+}
+
 //存款
     if (isset($_POST['btnsave'])) {
         // echo "存錢囉";
         // echo $formflag.":save";
+        // echo $_POST['smoney'];
         if($_POST['smoney']<=0)
         {
             ?>
@@ -33,8 +74,8 @@ $nowDate;
             $nowDate = date("Y-m-d H:i:s");
             // echo $nowDate;
             $commendTextdetail = <<<end
-            insert into historyList (transactionMoney,memberId,addOrsub,transactionDate) 
-            values ($savemoney,$mid,"存入","$nowDate");
+            insert into historyList (transactionMoney,memberId,addOrsub,transactionDate,remain) 
+            values ($savemoney,$mid,"存入","$nowDate",$temp);
             end;
             mysqli_query($link, $commendTextdetail);
             unset($_POST['btnsave']);
@@ -88,8 +129,8 @@ if (isset($_POST['btnget'])){
         mysqli_query($link, $commendTextget);
         $nowDate = date("Y-m-d H:i:s");
         $commendTextdetail = <<<end
-        insert into historyList (transactionMoney,memberId,addOrsub,transactionDate) 
-        values ($getmoney,$mid,"提出","$nowDate");
+        insert into historyList (transactionMoney,memberId,addOrsub,transactionDate,remain) 
+        values ($getmoney,$mid,"提出","$nowDate",$temp);
         end;
         // echo $commendTextdetail;
         mysqli_query($link, $commendTextdetail);
@@ -162,13 +203,33 @@ $dResult=mysqli_query($link,$commendTextDetail);
     <form method="post" id="form">
         <div id="d1" name="s">
             <label for="moneysave">請輸入欲儲存的金額</label>
+            <br>
+            <p>快速存款</p>
+            <button class="btn btn-success"  name="smoney1" >1000</button>
+            <button class="btn btn-success"  name="smoney2" >2000</button>
+            <button class="btn btn-success"  name="smoney3" >3000</button>
+            <button class="btn btn-success"  name="smoney4" >4000</button>
+            <button class="btn btn-success"  name="smoney5" >5000</button>
+            <button class="btn btn-success"  name="smoney6" >6000</button>
+            <br>
+            <br>
             <input id="moneysave" name="smoney" type="number">
             <button id="btnsave" class="btn btn-primary" name="btnsave">確定送出</button>
         </div>
         <div id="d2" name="g">
             <label for="moneyget">請輸入欲提出的金額</label>
+            <br>
+            <p>快速提款</p>
+            <button class="btn btn-danger"  name="gmoney1" >1000</button>
+            <button class="btn btn-danger"  name="gmoney2" >2000</button>
+            <button class="btn btn-danger"  name="gmoney3" >3000</button>
+            <button class="btn btn-danger"  name="gmoney4" >4000</button>
+            <button class="btn btn-danger"  name="gmoney5" >5000</button>
+            <button class="btn btn-danger"  name="gmoney6" >6000</button>
+            <br>
+            <br>
             <input id="moneyget" name="gmoney" type="number">
-            <button id="btnget" class="btn btn-danger" name="btnget">確定送出</button>
+            <button id="btnget" class="btn btn-primary" name="btnget">確定送出</button>
         </div>
         <!-- <div id="d3" name="askm">
             <label id="moneyask" for="moneyask">餘額還剩下<?= $_SESSION['canUseMoney'] ?></label>
@@ -180,6 +241,7 @@ $dResult=mysqli_query($link,$commendTextDetail);
                     <th>金額</th>
                     <th>收／支</th>
                     <th>交易日期</th>
+                    <th>交易後餘額</th>
                 </tr>
                 <?php
                     while($row=mysqli_fetch_assoc($dResult))
@@ -189,6 +251,7 @@ $dResult=mysqli_query($link,$commendTextDetail);
                     <td><?=$row['transactionMoney']?></td>
                     <td><?=$row['addOrsub']?></td>
                     <td><?=$row['transactionDate']?></td>
+                    <td><?=$row['remain']?></td>
                 </tr>               
                 <?php
                     }
