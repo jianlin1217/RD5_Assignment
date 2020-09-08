@@ -84,6 +84,8 @@ connectDB.php
 ### 想新增的功能
 計時系統  用戶登入後閒置一段時間後自動登出
 
+# 圖片
+![image](https://github.com/jianlin1217/RD5_Assignment/blob/master/localhost_8888_RD5_Assignment_RD5_Assignment_member.php.png)
 
 
 
